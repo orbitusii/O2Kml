@@ -9,14 +9,23 @@ namespace O2Kml.Styles
 {
     public class StyleMap
     {
+        [XmlAttribute]
+        public string id = "Default StyleMap";
+
         [XmlElement("Pair")]
         public KmlPair[] Pairs { get; set; } = Array.Empty<KmlPair>();
 
         [XmlIgnore]
-        public Dictionary<string, Style> Styles = new();
+        public Dictionary<string, Style>? Styles;
+
+        public Style this[string index]
+        {
+            get => Styles?[index.Replace("#", "")] ?? new();
+        }
 
         public void BuildDictionary (Style[] styleArray)
         {
+            Styles = new();
             foreach (var pair in Pairs)
             {
                 Style? foundStyle = styleArray.First(x => x.id == pair.styleUrl.Replace("#", ""));
