@@ -11,22 +11,22 @@ namespace KML
     [XmlRoot("kml", Namespace = "http://www.opengis.net/kml/2.2")]
     public class Kml
     {
-        public KmlDocument Document;
+        public KmlDocument Document = new KmlDocument();
 
         [XmlAnyAttribute]
-        public string[] Attributes;
+        public string[]? Attributes;
 
         [XmlAnyElement]
-        public object[] Elements;
+        public object[]? Elements;
     }
 
     public class KmlDocument
     {
         [XmlElement]
-        public string name;
+        public string name = "";
 
         [XmlElement("Placemark")]
-        public KmlPlacemark[] Placemarks;
+        public KmlPlacemark[] Placemarks = new KmlPlacemark[0];
     }
 
     public class KmlPlacemark
@@ -44,6 +44,6 @@ namespace KML
         [XmlElement("Polygon", typeof(Polygon))]
         [XmlElement("LinearRing", typeof(LineString))]
         [XmlElement("LineString", typeof(LineString))]
-        public object Shape;
+        public object? Shape;
     }
 }

@@ -12,7 +12,7 @@ namespace KML.Shapes
     {
         [XmlArray]
         [XmlArrayItem("LinearRing", typeof(LineString))]
-        public LineString[] outerBoundaryIs;
+        public LineString[]? outerBoundaryIs;
 
         [XmlArray]
         [XmlArrayItem("LinearRing", typeof(LineString))]
@@ -20,7 +20,7 @@ namespace KML.Shapes
 
         public override LatLon[] GetPoints()
         {
-            return outerBoundaryIs[0].Coordinates.ToArray();
+            return outerBoundaryIs?[0].Coordinates.ToArray() ?? Array.Empty<LatLon>();
         }
     }
 }
