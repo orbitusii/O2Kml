@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace KML.Shapes
+namespace O2Kml.Shapes
 {
     public abstract class KmlShape
     {

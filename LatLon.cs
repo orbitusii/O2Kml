@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace KML
+namespace O2Kml
 {
     public class LatLon
     {
         private const string Pattern = @"(?<lon>\d+[.]?\d*),(?<lat>\d+[.]?\d*)([,](?<alt>\d+[.]?\d*))?";
         public static readonly Regex LatLonRegex = new Regex(Pattern, RegexOptions.IgnoreCase);
 
-        public double Lat;
-        public double Lon;
-        public double? Alt;
+        public double Lat = 0;
+        public double Lon = 0;
+        public double Alt = 0;
 
         public override string ToString()
         {
-            return $"{Lat},{Lon}{(Alt.HasValue ? "," : "")}{Alt}";
+            return $"{Lat},{Lon},{Alt}";
         }
 
         public static LatLon FromRegexMatch (Match match)

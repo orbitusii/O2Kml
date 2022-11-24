@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Text.RegularExpressions;
 
-namespace KML.Shapes
+namespace O2Kml.Shapes
 {
     [XmlType("LineString")]
     public class LineString: KmlShape

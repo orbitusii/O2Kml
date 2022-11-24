@@ -1,14 +1,12 @@
-﻿using System;
+﻿using O2Kml.Styles;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using KML.Shapes;
-using O2Kml.Styles;
 
-namespace KML
+namespace O2Kml
 {
     [XmlRoot("kml", Namespace = "http://www.opengis.net/kml/2.2")]
     public class Kml
@@ -21,6 +19,24 @@ namespace KML
         [XmlAnyElement]
         public object[]? Elements;
 
+        public virtual void FinalizeLoad ()
+        {
+            foreach(StyleMap sm in Document.StyleMaps)
+            {
+                sm.BuildDictionary(Document.Styles);
+            }
+
+            foreach(KmlPlacemark placemark in Document.Placemarks)
+            {
+                placemark.styleMap = Document.StyleMaps.First(x => x.id == placemark.styleUrl?.Replace("#", ""));
+            }
+        }
+
+        public bool SaveToFile(string filename, bool overwrite = true)
+        {
+            return SaveToFile(this, filename, overwrite);
+        }
+
         public static Kml? LoadFromFile (string filename)
         {
             using (FileStream fs = new FileStream(filename, FileMode.Open))
@@ -28,7 +44,7 @@ namespace KML
                 XmlSerializer ser = new XmlSerializer(typeof(Kml));
                 Kml loaded = ser.Deserialize(fs) as Kml ?? new();
 
-                loaded.Document.StyleMap.BuildDictionary(loaded.Document.Styles);
+                loaded.FinalizeLoad();
 
                 return loaded;
             }
@@ -46,11 +62,6 @@ namespace KML
                 loaded = null;
                 return false;
             }
-        }
-
-        public bool SaveToFile(string filename, bool overwrite = true)
-        {
-            return SaveToFile(this, filename, overwrite);
         }
 
         public static bool SaveToFile (Kml kml, string filename, bool overwrite = true)
@@ -71,37 +82,5 @@ namespace KML
                 return true;
             }
         }
-    }
-
-    public class KmlDocument
-    {
-        [XmlElement]
-        public string name = "";
-
-        public StyleMap StyleMap = new();
-
-        [XmlElement("Style")]
-        public Style[] Styles = Array.Empty<Style>();
-
-        [XmlElement("Placemark")]
-        public KmlPlacemark[] Placemarks = new KmlPlacemark[0];
-    }
-
-    public class KmlPlacemark
-    {
-        [XmlElement]
-        public string? name;
-
-        [XmlElement]
-        public string? styleUrl;
-
-        [XmlIgnore]
-        public ShapeType ShapeType;
-
-        [XmlChoiceIdentifier("ShapeType")]
-        [XmlElement("Polygon", typeof(Polygon))]
-        [XmlElement("LinearRing", typeof(LineString))]
-        [XmlElement("LineString", typeof(LineString))]
-        public object? Shape;
     }
 }
