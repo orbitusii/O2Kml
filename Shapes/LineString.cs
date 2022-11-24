@@ -12,7 +12,7 @@ namespace O2Kml.Shapes
     public class LineString: KmlShape
     {
         [XmlIgnore]
-        public List<LatLon> Coordinates;
+        public List<LatLon> Coordinates = new();
 
         [XmlElement("coordinates")]
         public string InnerText
@@ -26,7 +26,7 @@ namespace O2Kml.Shapes
         }
 
         [XmlAnyElement]
-        public object[] Elements;
+        public object[]? Elements;
 
         public override LatLon[] GetPoints()
         {
