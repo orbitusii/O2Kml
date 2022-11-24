@@ -11,21 +11,21 @@ namespace O2Kml.Styles
     public class Style
     {
         [XmlAttribute]
-        public string id { get; set; } = "new style";
+        public string id { get; set; } = "default style";
 
         [XmlElement]
-        public IconStyle? IconStyle { get; set; }
+        public IconStyle IconStyle { get; set; } = new();
         [XmlElement]
-        public LineStyle? LineStyle { get; set; }
+        public LineStyle LineStyle { get; set; } = new();
         [XmlElement]
-        public PolyStyle? PolyStyle { get; set; }
+        public PolyStyle PolyStyle { get; set; } = new();
 
         public bool Equals(Style? obj)
         {
             return id == obj?.id
-                && (IconStyle?.Equals(obj.IconStyle) ?? obj.IconStyle is null)
-                && (LineStyle?.Equals(obj.LineStyle) ?? obj.LineStyle is null)
-                && (PolyStyle?.Equals(obj.PolyStyle) ?? obj.PolyStyle is null);
+                && (IconStyle.Equals(obj.IconStyle))
+                && (LineStyle.Equals(obj.LineStyle))
+                && (PolyStyle.Equals(obj.PolyStyle));
         }
 
         public override string ToString()
@@ -93,12 +93,18 @@ namespace O2Kml.Styles
         {
             return $"LineStyle: {color} @{width}px";
         }
+
+        public LineStyle ()
+        {
+            color = "ffffffff";
+            width = 1;
+        }
     }
 
     public class PolyStyle
     {
         [XmlElement]
-        public string color { get; set; } = "ffffffff";
+        public string color { get; set; } = "84ffffff";
 
         public bool Equals (PolyStyle? obj)
         {
