@@ -9,8 +9,7 @@ namespace O2Kml
 {
     public class LatLon
     {
-        private const string Pattern = @"(?<lon>\d+[.]?\d*),(?<lat>\d+[.]?\d*)([,](?<alt>\d+[.]?\d*))?";
-        public static readonly Regex LatLonRegex = new Regex(Pattern, RegexOptions.IgnoreCase);
+        public static readonly Regex LatLonRegex = new Regex(@"(?<lon>[-]?\d+[.]?\d*),(?<lat>[-]?\d+[.]?\d*)([,](?<alt>[-]?\d+[.]?\d*))?", RegexOptions.IgnoreCase);
 
         public double Lat = 0;
         public double Lon = 0;
