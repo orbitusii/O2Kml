@@ -4,11 +4,8 @@ using O2Kml.Styles;
 
 namespace O2Kml
 {
-    public class KmlPlacemark
+    public class KmlPlacemark: KmlItem
     {
-        [XmlElement]
-        public string? name;
-
         [XmlElement]
         public string? styleUrl = "#";
 
