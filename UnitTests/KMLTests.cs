@@ -7,23 +7,12 @@ namespace UnitTests
     [TestClass]
     public class KMLTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        public readonly Kml TestKml = new()
         {
-            // TODO: Add some more reasonable tests here
-            Assert.IsTrue(true);
-            Assert.IsFalse(false);
-        }
-
-        [TestMethod]
-        public void TestLoadFinalizing ()
-        {
-            Kml kml = new()
+            Document = new()
             {
-                Document = new()
-                {
-                    name = "test",
-                    StyleMaps = new StyleMap[]
+                name = "test",
+                StyleMaps = new StyleMap[]
                     {
                         new()
                         {
@@ -38,18 +27,18 @@ namespace UnitTests
                             }
                         }
                     },
-                    Styles = new Style[]
+                Styles = new Style[]
                     {
                         new()
                         {
-                            id= "normal style",
+                            id = "normal style",
                         }
                     },
-                    Placemarks = new KmlPlacemark[]
+                Items = new KmlItem[]
                     {
-                        new()
+                        new KmlPlacemark
                         {
-                            name = "test placemark",
+                            Name = "test placemark",
                             styleUrl = "#msn test",
                             Shape = new LineString
                             {
@@ -60,15 +49,61 @@ namespace UnitTests
                                     new() {Lat = 1, Lon = 1,}
                                 }
                             }
+                        },
+                        new KmlPlacemark
+                        {
+                            Name = "point",
+                            styleUrl = "#msn test",
+                            Shape = new KmlPoint
+                            {
+                                InnerText = "45.00000000000000,45,100",
+                            }
+                        },
+                        new KmlFolder
+                        {
+                            Name = "Folder",
+                            Description = "something",
+                            Items = Array.Empty<KmlItem>(),
                         }
                     }
-                }
-            };
+            }
+        };
 
-            kml.FinalizeLoad();
+        [TestMethod]
+        public void TestMethod1()
+        {
+            // TODO: Add some more reasonable tests here
+            Assert.IsTrue(true);
+            Assert.IsFalse(false);
+        }
 
-            Assert.IsNotNull(kml.Document.StyleMaps[0].Styles, $"Style map failed to have its dictionary built");
-            Assert.IsNotNull(kml.Document.Placemarks[0].styleMap, $"Placemark failed to find a StyleMap object");
+        [TestMethod]
+        public void TestLoadFinalizing()
+        {
+            TestKml.FinalizeLoad();
+
+            Assert.IsTrue(TestKml.Document.Items.Count() == 3);
+
+            Assert.IsNotNull(TestKml.Document.StyleMaps[0].Styles, $"Style map failed to have its dictionary built");
+            Assert.IsNotNull(((KmlPlacemark)TestKml.Document.Items[0]).styleMap, $"Placemark failed to find a StyleMap object");
+        }
+
+        [TestMethod]
+        public void TestKmlPlacemarks ()
+        {
+            Assert.IsTrue(TestKml.Document.Placemarks.Count() == 2);
+
+            Assert.IsInstanceOfType(((KmlPlacemark)TestKml.Document.Items[1]).Shape, typeof(KmlPoint));
+            Assert.IsTrue((((KmlPlacemark)TestKml.Document.Items[1]).Shape as KmlPoint).Coordinates.Equals(new LatLon { Lat = 45, Lon = 45, Alt = 100 }));
+        }
+
+        [TestMethod]
+        public void TestKmlFolders ()
+        {
+            Assert.IsTrue(TestKml.Document.Folders.Count() == 1);
+            Assert.IsTrue(TestKml.Document.Folders.First().Name == "Folder");
+            Assert.IsTrue(TestKml.Document.Folders.First().Description == "something");
+            Assert.IsTrue(TestKml.Document.Folders.First().Items.Count() == 0);
         }
     }
 }
