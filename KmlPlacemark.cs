@@ -22,6 +22,7 @@ namespace O2Kml
         [XmlElement("Polygon", typeof(Polygon))]
         [XmlElement("LinearRing", typeof(LineString))]
         [XmlElement("LineString", typeof(LineString))]
+        [XmlElement("Point", typeof(KmlPoint))]
         public object? Shape;
     }
 }
