@@ -20,5 +20,6 @@ namespace O2Kml.Shapes
         Polygon,
         LinearRing,
         LineString,
+        Point,
     }
 }
