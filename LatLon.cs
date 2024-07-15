@@ -29,5 +29,18 @@ namespace O2Kml
 
             return new LatLon { Lat = lat, Lon = lon, Alt = alt };
         }
+
+        public override bool Equals(object? obj)
+        {
+            if(obj is LatLon second)
+            {
+                return this.GetHashCode() == second.GetHashCode();
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() => Lat.GetHashCode() + Lon.GetHashCode() + Alt.GetHashCode();
+        
     }
 }
